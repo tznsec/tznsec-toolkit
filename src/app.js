@@ -970,6 +970,8 @@ async function bindSettings() {
     const p = provs.find((x) => x.id === $("#sProv").value);
     $("#sModel").value = p && p.modele && p.modele.length ? p.modele[0] : (ai.model || "");
     $("#sKeyInfo").textContent = p ? p.uwaga : "";
+    // klucz wspolnotowy wklejony w kod - pokazujemy, ze jest dostepny
+    if (p && AI_PREFILL[p.id] && !$("#sKey").value) $("#sKey").value = AI_PREFILL[p.id];
   };
   onProv();
   $("#sProv").addEventListener("change", onProv);
@@ -1061,10 +1063,13 @@ async function applySettings() {
 
 const AI = { providers: [], base: "", model: "", history: [], context: "", busy: false, approveAll: false };
 
-/* Klucze API NIGDY nie są zapisywane w kodzie.
-   Wklej je w zakładce Ustawienia — zapisują się szyfrowane (AES-256-GCM)
-   w %APPDATA%\tznsec-toolkit\settings.dat, poza repozytorium. */
-const AI_PREFILL = {};
+/* Wbudowany klucz wspolnotowy - dziala od razu po instalacji.
+   UWAGA: jest publiczny, wiec dzieli limity darmowego planu miedzy wszystkimi
+   uzytkownikami. Gdy przestanie dzialac, w Ustawieniach mozna wkleic wlasny klucz
+   albo przelaczyc sie na Ollama / LM Studio (lokalne, bez limitow). */
+const AI_PREFILL = {
+  xkiro: "sk-xt-dba423731dbc63d16e486ce02bf91dc58d61e0a043e77855",
+};
 
 /* wyniki ostatniego uruchomienia narzedzi - wplatane z powrotem do rozmowy */
 let agentResults = [];
@@ -1081,6 +1086,12 @@ function aiShell() {
       <label>Klucz API</label>
       <input type="password" id="aiKey" placeholder="wklej swoj klucz" autocomplete="off" />
       <p class="hint" id="aiKeyNote"></p>
+      <p class="hint" id="aiSharedNote" hidden>
+        Wbudowany klucz wspólnotowy działa od razu, ale dzieli limity darmowego planu
+        między wszystkich użytkowników. Gdy się wyczerpie, wybierz Ollama lub LM Studio
+        w zakładce <b>Narzędzia</b> — działają lokalnie, bez limitów i bez klucza.
+        Własny klucz wkleisz w <b>Ustawieniach</b>.
+      </p>
       <div id="aiCustomBox" hidden>
         <label>Adres endpointu</label>
         <input id="aiBase" placeholder="https://api.twojeprovider.com/v1" />
@@ -1183,6 +1194,22 @@ function aiResultBlock(title, cmd, rawOut, exitCode, analysis) {
   $("#aiLog").appendChild(el);
   $("#aiLog").scrollTop = $("#aiLog").scrollHeight;
   return el;
+}
+
+/* Wbudowany klucz wspolnotowy dziala na darmowym planie, ktory ma limity.
+   Gdy zostana wyczerpane przez wielu uzytkownikow, podpowiedz lokalna alternatywe. */
+function explainApiError(msg) {
+  const m = String(msg || "").toLowerCase();
+  if (/429|rate.?limit|quota|too many|resource_exhausted|przekrocz/.test(m)) {
+    return msg + "\n\nWspolny klucz darmowego planu jest wyczerpany — to ograniczenie konta, " +
+      "nie blad aplikacji. Uzyj Ollama albo LM Studio (zakladka Narzedzia, instalacja jednym kliknieciem): " +
+      "dzialaja lokalnie, bez limitow i bez klucza. Wlasny klucz wkleisz w Ustawieniach.";
+  }
+  if (/401|403|unauthorized|permission|forbidden/.test(m)) {
+    return msg + "\n\nKlucz zostal odrzucony. Wpisz wlasny klucz w Ustawieniach " +
+      "albo przelacz sie na Ollama / LM Studio (lokalne, bez klucza).";
+  }
+  return msg;
 }
 
 async function runCommand(cmd, title) {
@@ -1372,6 +1399,7 @@ function aiProviderChanged() {
   $("#aiModel").style.display = custom ? "none" : "";
   $("#aiKey").style.display = p && p.klucz ? "" : "none";
   $("#aiKeyNote").textContent = p ? p.uwaga : "";
+  $("#aiSharedNote").hidden = !(p && AI_PREFILL[p.id]);
 }
 
 async function initAi() {
@@ -1465,7 +1493,7 @@ async function aiSend() {
     });
     wait.remove();
     if (r.error) {
-      aiBubble("err", r.error);
+      aiBubble("err", explainApiError(r.error));
     } else {
       // --- kontrola spojnosci: obietnica bez wykonania ---
       if (hasUnverifiedClaim(r.tresc, toolsRanThisTurn)) {
@@ -1500,7 +1528,7 @@ async function aiSend() {
               req: { base: AI.base, api_key: key, model: model, messages: AI.history, context: AI.context },
             });
             w2.remove();
-            if (r2.error) aiBubble("err", r2.error);
+            if (r2.error) aiBubble("err", explainApiError(r2.error));
             else {
               aiBubble("ai", r2.tresc);
               AI.history.push({ role: "assistant", content: r2.tresc });
