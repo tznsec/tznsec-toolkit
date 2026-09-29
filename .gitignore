@@ -1,0 +1,42 @@
+# --- Rust / Tauri ---
+/target
+**/target/
+*.rs.bk
+
+# --- Build ---
+*.pdb
+*.ilk
+*.exe
+*.dll
+*.lib
+*.o
+*.obj
+
+# --- Tauri ---
+gen/schemas/
+
+# --- Katalog roboczy agenta AI (uzytkownikowi nie nalezy w repo) ---
+tznsec-workspace/
+
+# --- Sekrety - NIGDY nie commitowac ---
+*.key
+*.pem
+*.pfx
+*.p12
+.env
+.env.*
+secrets.json
+settings.dat
+settings.json
+
+# --- IDE / OS ---
+.vscode/
+.idea/
+*.swp
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# --- Logi / temp ---
+*.log
+*.tmp

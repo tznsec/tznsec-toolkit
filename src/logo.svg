@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512" role="img" aria-label="TZNSEC">
+  <defs>
+    <linearGradient id="sh" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#22e0ff"/>
+      <stop offset="50%" stop-color="#3d7bff"/>
+      <stop offset="100%" stop-color="#8b5cff"/>
+    </linearGradient>
+    <linearGradient id="gl" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity=".40"/>
+      <stop offset="65%" stop-color="#ffffff" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="t" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#eafcff"/>
+      <stop offset="100%" stop-color="#7fe9ff"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="512" height="512" rx="116" fill="#06070f"/>
+  <rect x="9" y="9" width="494" height="494" rx="108" fill="none" stroke="url(#sh)" stroke-opacity=".30" stroke-width="4"/>
+
+  <!-- tarcza -->
+  <path d="M256 76 L404 134 v124c0 90-62 149-148 177-86-28-148-87-148-177V134z" fill="url(#sh)"/>
+  <path d="M256 76 L404 134 v124c0 90-62 149-148 177z" fill="#000" opacity=".11"/>
+  <path d="M256 90 L390 142 v114c0 82-56 136-134 162z" fill="url(#gl)"/>
+  <path d="M256 76 L404 134 v124c0 90-62 149-148 177-86-28-148-87-148-177V134z"
+        fill="none" stroke="#dffaff" stroke-opacity=".5" stroke-width="6" stroke-linejoin="round"/>
+
+  <!-- obwódka/klawiatura -->
+  <g stroke="#04070f" stroke-width="9" stroke-linecap="round" opacity=".55">
+    <path d="M150 300h-34M150 322h-22M150 344h-34M362 300h34M362 322h22M362 344h34"/>
+  </g>
+
+  <!-- litera T -->
+  <g fill="url(#t)">
+    <rect x="176" y="176" width="160" height="30" rx="15"/>
+    <rect x="241" y="176" width="30" height="164" rx="15"/>
+  </g>
+
+  <!-- klucz / chip -->
+  <g>
+    <circle cx="256" cy="300" r="34" fill="#04070f"/>
+    <rect x="248" y="288" width="16" height="26" rx="8" fill="#22e0ff"/>
+    <circle cx="256" cy="300" r="8" fill="#04070f"/>
+  </g>
+</svg>

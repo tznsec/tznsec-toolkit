@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>TZNSEC Toolkit</title>
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+<!-- ================= BOOT ================= -->
+<div class="boot" id="boot">
+  <div class="boot-inner">
+    <div class="boot-logo">
+      <img src="logo.svg" alt="" class="boot-mark" id="bootMark" />
+      <div class="boot-rings" aria-hidden="true"><i></i><i></i><i></i></div>
+    </div>
+    <h1 class="boot-title">TZNSEC<span>TOOLKIT</span></h1>
+    <div class="boot-bar"><i id="bootFill"></i></div>
+    <pre class="boot-log" id="bootLog"></pre>
+    <div class="boot-hint">naciśnij <kbd>Esc</kbd> aby pominąć</div>
+  </div>
+</div>
+
+<!-- ================= APP ================= -->
+<div class="app" id="app" hidden>
+
+  <header class="topbar">
+    <div class="brand">
+      <img src="logo.svg" alt="TZNSEC Toolkit" class="brand-logo" />
+      <div class="brand-text">
+        <strong>TZNSEC</strong>
+        <span>TOOLKIT</span>
+      </div>
+    </div>
+
+    <nav class="tabs" id="tabs" role="tablist">
+      <button class="tab active" data-cat="crypto" role="tab"><i>🔐</i>Kryptografia</button>
+      <button class="tab" data-cat="sec" role="tab"><i>🛡️</i>Cyberbezpieczeństwo</button>
+      <button class="tab" data-cat="net" role="tab"><i>🌐</i>Sieć</button>
+      <button class="tab" data-cat="lab" role="tab"><i>🧪</i>Laboratorium</button>
+      <button class="tab" data-cat="ai" role="tab"><i>🤖</i>AI Hacking</button>
+      <button class="tab" data-cat="set" role="tab"><i>⚙️</i>Ustawienia</button>
+      <button class="tab" data-cat="tools" role="tab"><i>🧰</i>Narzędzia</button>
+    </nav>
+
+    <div class="status">
+      <span class="dot" id="statusDot"></span>
+      <span class="status-text" id="statusText">łączę…</span>
+      <span class="status-text" id="vpInfo"></span>
+    </div>
+  </header>
+
+  <!-- widok listy narzędzi -->
+  <main class="view" id="gridView">
+    <div class="view-head">
+      <h2 id="catTitle">Kryptografia</h2>
+      <p id="catDesc"></p>
+    </div>
+    <div class="cards" id="cards"></div>
+    <footer class="foot">
+      <span>Wykonane przez <b>tznsec</b></span>
+      <span class="sep">·</span>
+      <span id="toolCount">narzędzi</span>
+    </footer>
+  </main>
+
+  <!-- widok pojedynczego narzędzia -->
+  <main class="view tool-view" id="toolView" hidden>
+    <button class="back" id="backBtn">← Wszystkie narzędzia</button>
+    <div class="view-head">
+      <h2 id="toolTitle"></h2>
+      <p id="toolDesc"></p>
+    </div>
+    <div class="panel" id="toolForm"></div>
+    <div class="out" id="toolOut"></div>
+  </main>
+
+</div>
+
+<script>
+  // znacznik diagnostyczny - usunac po naprawie
+  var L = document.getElementById("bootLog");
+  function diag(m){ if(L) L.textContent += m + "\n"; }
+  diag("JS-OK inline dziala");
+  diag("viewport " + window.innerWidth + "x" + window.innerHeight + " dpr=" + window.devicePixelRatio);
+  addEventListener("error", function(e){ diag("ERR: " + e.message); }, true);
+</script>
+<script src="app.js" onload="diag('app.js zaladowany')" onerror="diag('app.js NIE ZALADOWANY')"></script>
+</body>
+</html>
